@@ -1,17 +1,25 @@
 const facts = [
-  { value: '7', label: 'Landnutzungsklassen' },
-  { value: '10 m', label: 'Auflösung' },
-  { value: '80,94 %', label: 'Genauigkeit' },
+  { value: '7', label: 'Land cover classes' },
+  { value: '10 m', label: 'Resolution' },
+  { value: '80.94 %', label: 'Accuracy' },
 ]
 
 export default function AuthLayout({ title, subtitle, children }) {
   return (
     <div className="flex min-h-screen">
-      {/* Linke Seite: Höhenlinien */}
+      {/* Left side: contour lines */}
       <div className="relative hidden overflow-hidden bg-neutral-950 md:flex md:w-1/2">
-        <svg className="drift absolute -inset-20 h-[calc(100%+10rem)] w-[calc(100%+10rem)] opacity-30">
+        <svg className="drift absolute -inset-40 h-[calc(100%+20rem)] w-[calc(100%+20rem)] opacity-30">
           <filter id="topo" x="0" y="0" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.003 0.005" numOctaves="3" seed="12" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.003 0.005" numOctaves="3" seed="12">
+              {/* Slowly changes the terrain so the lines flow */}
+              <animate
+                attributeName="baseFrequency"
+                values="0.003 0.005; 0.0036 0.0056; 0.003 0.005"
+                dur="30s"
+                repeatCount="indefinite"
+              />
+            </feTurbulence>
             <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1 0 0 0 0" />
             <feComponentTransfer>
               <feFuncA
@@ -23,12 +31,11 @@ export default function AuthLayout({ title, subtitle, children }) {
           <rect width="100%" height="100%" filter="url(#topo)" />
         </svg>
 
-        {/* Rotes Leuchten unten links */}
+        {/* Red glow bottom left */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              'radial-gradient(circle at 0% 100%, rgba(191,30,45,0.55), transparent 60%)',
+            background: 'radial-gradient(circle at 0% 100%, rgba(191,30,45,0.55), transparent 60%)',
           }}
         />
 
@@ -51,7 +58,7 @@ export default function AuthLayout({ title, subtitle, children }) {
         </div>
       </div>
 
-      {/* Rechte Seite: Formular */}
+      {/* Right side: form */}
       <div className="flex w-full items-center justify-center bg-white px-6 md:w-1/2">
         <div className="w-full max-w-md">
           <p className="mb-8 text-sm font-semibold uppercase tracking-[0.3em] text-brand md:hidden">
